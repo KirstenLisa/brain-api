@@ -1,0 +1,14 @@
+  
+BEGIN;
+
+ALTER TABLE users DROP COLUMN current_task;
+
+ALTER TABLE users DROP COLUMN do_tasks;
+
+ALTER TABLE users DROP COLUMN done_tasks;
+
+DROP TYPE IF EXISTS category;
+
+DROP TABLE IF EXISTS tasks;
+
+COMMIT;

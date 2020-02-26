@@ -1,0 +1,7 @@
+BEGIN;
+
+ALTER TABLE posts DROP COLUMN user_id;
+
+DROP TABLE IF EXISTS users;
+
+COMMIT;
