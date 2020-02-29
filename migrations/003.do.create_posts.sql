@@ -3,6 +3,6 @@ CREATE TABLE posts (
     user_id INTEGER 
         REFERENCES users(id) ON DELETE CASCADE NOT NULL,
     content TEXT NOT NULL,
-    post_pic TEXT NOT NULL,
+    post_pic TEXT,
     date TIMESTAMP DEFAULT now() NOT NULL
 );
