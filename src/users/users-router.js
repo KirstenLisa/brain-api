@@ -33,8 +33,8 @@ usersRouter
   })
 
   .post(jsonBodyParser, (req, res, next) => {
-    const { username, fullname, email, password, profile_pic, current_task, do_tasks, done_tasks } = req.body
-    const newUser = { username, fullname, email, password, profile_pic, current_task, do_tasks, done_tasks }
+    const { username, fullname, email, password, current_task } = req.body
+    const newUser = { username, fullname, email, password, current_task }
 
    
 
@@ -66,10 +66,7 @@ usersRouter
               fullname,
               email,
               password: hashedPassword,
-              profile_pic,
-              current_task,
-              do_tasks,
-              done_tasks
+              current_task
             }
 
             return UsersService.insertUser(

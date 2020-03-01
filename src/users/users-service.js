@@ -14,7 +14,7 @@ const UsersService = {
     },
 
     hasUserWithUserName(db, username) {
-      return db('classroom_users')
+      return db('users')
         .where({ username })
         .first()
         .then(user => !!user)
@@ -56,7 +56,7 @@ const UsersService = {
     },
 
   updateUser(knex, id, newUserFields) {
-      return knex('classroom_users')
+      return knex('users')
         .where('id', id)
         .update(newUserFields)
     }

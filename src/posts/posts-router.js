@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const xss = require('xss');
 const PostsService = require('./posts-service');
-//const { requireAuth } = require('../middleware/jwt-auth');
+const { requireAuth } = require('../middleware/jwt-auth');
 
 
 const postsRouter = express.Router()
@@ -19,7 +19,7 @@ const serializePost = post => ({
 
 postsRouter
   .route('/')
-  //.all(requireAuth)
+  .all(requireAuth)
   .get((req, res, next) => {
     const knexInstance = req.app.get('db')
     PostsService.getAllPosts(knexInstance)
@@ -29,9 +29,9 @@ postsRouter
     .catch(next)
   })
 
-  .post(jsonBodyParser, (req, res, next) => {
-    const { content, post_pic, date } = req.body
-    const newPost = { content, post_pic, date }
+  .post(requireAuth, jsonBodyParser, (req, res, next) => {
+    const { content, post_pic, user_id, date } = req.body
+    const newPost = { content, post_pic, user_id, date }
 
     for (const [key, value] of Object.entries(newPost)) {
       if (value == null) {
@@ -43,6 +43,7 @@ postsRouter
 
     newPost.content = content;
     newPost.post_pic = post_pic;
+    newPost.user_id = user_id;
     newPost.date = date;
 
     PostsService.insertPost(
@@ -59,8 +60,33 @@ postsRouter
   })
 
 postsRouter
-  .route('/:postId')
-  //.all(requireAuth)
+  .route('/:userId')
+  .all(requireAuth)
+  .all((req, res, next) => {
+    const knexInstance = req.app.get('db')
+    PostsService.getByUser(
+      knexInstance,
+      req.params.userId
+    )
+      .then(post => {
+        if (!post) {
+          return res.status(404).json({
+            error: { message: `User posts do not exist` }
+          })
+        }
+        res.post = post
+        next()
+      })
+      .catch(next)
+  })
+  .get((req, res, next) => {
+    res.json(res.post.map(post => serializePost(post)))
+  })
+
+
+postsRouter
+  .route('/:userId/:postId')
+  .all(requireAuth)
   .all((req, res, next) => {
     const knexInstance = req.app.get('db')
     PostsService.getById(
@@ -70,7 +96,7 @@ postsRouter
       .then(post => {
         if (!post) {
           return res.status(404).json({
-            error: { message: `Post doesn't exist` }
+            error: { message: `Post does not exist` }
           })
         }
         res.post = post
@@ -89,13 +115,14 @@ postsRouter
     )
       .then(numRowsAffected => {
         res.status(204).end()
+        console.log('deleted')
       })
       .catch(next)
   })
 
-  .patch(jsonBodyParser, (req, res, next) => {
-    const { content, post_pic, date } = req.body
-    const postToUpdate = { content, post_pic, date }
+  .patch(requireAuth, jsonBodyParser, (req, res, next) => {
+    const { content, post_pic, user_id, date } = req.body
+    const postToUpdate = { content, post_pic, user_id, date }
 
     const numberOfValues = Object.values(postToUpdate).filter(Boolean).length
     if (numberOfValues === 0)

@@ -13,7 +13,7 @@ VALUES
 ('Meditate', 'Soul'),
 ('Sort all photos you have ever taken', 'Other'),
 ('Adopt a Dog', 'Soul'),
-('Sort all photos you have ever taken'. 'Other'),
+('Sort all photos you have ever taken', 'Other'),
 ('Adopt a Dog', 'Soul'),
 ('Plant a Tree', 'Other'),
 ('Sleep Outside', 'Body'),
@@ -35,24 +35,24 @@ VALUES
 
 INSERT INTO users(username, fullname, email, password, profile_pic, current_task, do_tasks, done_tasks)
 VALUES
-('fluffy_rabbit', 'Dings Bums',  'dingsbums@email.com', 'Password!123', 'URL', 1, [2, 5, 6, 7], [3,4, 8, 9, 10, 11, 12]),
-('Dulli', 'Dulli Duldul', 'dulliduldul@email.com', 'Password!123', 'URL', 2, [2, 10, 8], [3,4]);
+('fluffy_rabbit', 'Dings Bums',  'dingsbums@email.com', 'Password!123', 'URL', 1, '{2, 5, 6, 7}', '{3, 4, 8, 9, 10, 11, 12}'),
+('Dulli', 'Dulli Duldul', 'dulliduldul@email.com', 'Password!123', 'URL', 2, '{2, 10, 8}', '{3, 4}');
 
 
-INSERT INTO posts(user_id, content, post_pic)
+INSERT INTO posts(content, post_pic, user_id)
 VALUES
-(1, 'I met my friends and we all got a haircut. Do we look pretty?', 'URL'),
-(1, 'Today I went running to train for the marathon.', 'URL'),
-(1, 'Partied all weekend. What about you?', 'URL'),
-(1, 'What do you say about my new hairstyling?', 'URL'),
-(1, 'My new profile pic. You like it?', 'URL'),
-(2, 'Chilling....', 'URL'),
-(2, 'Nothing is too big for me. Watch out!', 'URL'),
-(2, 'Mood on a cloudy day...', 'URL'),
-(2, 'Feeling sexy...', 'URL'), 
-(2, 'Digging for gold, losers. BLING BLING', 'URL'),
-(2, 'SO SAAAAAD :-(', 'URL'),
-(2, 'Travelling to the best places. What about you?', 'URL');
+('I met my friends and we all got a haircut. Do we look pretty?', 'URL', 1),
+('Today I went running to train for the marathon.', 'URL', 1),
+('Partied all weekend. What about you?', 'URL', 1),
+('What do you say about my new hairstyling?', 'URL', 1),
+('My new profile pic. You like it?', 'URL', 1),
+('Chilling....', 'URL', 2),
+('Nothing is too big for me. Watch out!', 'URL', 2),
+('Mood on a cloudy day...', 'URL', 2),
+('Feeling sexy...', 'URL', 2), 
+('Digging for gold, losers. BLING BLING', 'URL', 2),
+('SO SAAAAAD...', 'URL', 2),
+('Travelling to the best places. What about you?', 'URL', 2);
 
 
 

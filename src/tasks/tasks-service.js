@@ -1,16 +1,26 @@
-const TeachersService = {
+const TasksService = {
 
-    getAllTeachers(knex) {
-        return knex.select('*').from('teachers')
+    getAllTasks(knex) {
+        return knex.select('*').from('tasks')
     },
 
     getById(knex, id) {
-        return knex.from('teachers')
+        return knex.from('tasks')
         .select('*')
-        .where('id', id)
+        .where('task_id', id)
         .first()
       },
+
+      insertTask(knex, newTask) {
+        return knex
+          .insert(newTask)
+          .into('tasks')
+          .returning('*')
+          .then(rows => {
+            return rows[0]
+            })
+          },
 }
 
 
-module.exports = TeachersService
+module.exports = TasksService

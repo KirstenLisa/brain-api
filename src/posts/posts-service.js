@@ -11,6 +11,12 @@ const PostsService = {
         .first()
       },
 
+      getByUser(knex, userId) {
+        return knex.from('posts')
+        .select('*')
+        .where('user_id', userId)
+      },
+
     insertPost(knex, newPost) {
       return knex
         .insert(newPost)
@@ -30,7 +36,7 @@ const PostsService = {
     updatePost(knex, id, newPostFields) {
       return knex('posts')
           .where('post_id', id)
-          .post(newPostFields)
+          .update(newPostFields)
       }
 }
 

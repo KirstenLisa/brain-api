@@ -1,8 +1,10 @@
 const express = require('express')
 const xss = require('xss')
+const path = require('path')
 const TasksService = require('./tasks-service')
 
 const tasksRouter = express.Router()
+const jsonBodyParser = express.json()
 
 const serializeTask = task => ({
     task_id: task.task_id,
@@ -22,15 +24,43 @@ tasksRouter
     .catch(next)
   })
 
+  .post(jsonBodyParser, (req, res, next) => {
+    const { description, category } = req.body
+    const newTask = { description, category }
+
+    for (const [key, value] of Object.entries(newTask)) {
+      if (value == null) {
+        return res.status(400).json({
+          error: { message: `Missing '${key}' in request body` }
+        })
+      }
+    }
+
+    newTask.description = description;
+    newTask.category = category;
+
+    TasksService.insertTask(
+      req.app.get('db'),
+      newTask
+    )
+      .then(task => {
+        res
+          .status(201)
+          .location(path.posix.join(req.originalUrl, `/${task.task_id}`))
+          .json(serializeTask(task))
+      })
+      .catch(next)
+  })
+
 
 tasksRouter
   .route('/:taskId')
 
   .all((req, res, next) => {
     const knexInstance = req.app.get('db')
-    TeachersService.getById(
+    TasksService.getById(
       knexInstance,
-      req.params.teacherId
+      req.params.taskId
     )
       .then(task => {
         if (!task) {

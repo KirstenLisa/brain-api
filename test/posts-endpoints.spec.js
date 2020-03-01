@@ -1,7 +1,7 @@
 const { expect } = require('chai')
 const knex = require('knex')
 const app = require('../src/app')
-const { seedUsers, seedPosts, makeAuthHeader, makeMaliciousPost, makePostsArray, makeUsersArray } = require('./test-helpers')
+const { seedUsers, seedPosts, seedTasks, makeTasksArray, makeAuthHeader, makeMaliciousPost, makePostsArray, makeUsersArray } = require('./test-helpers')
 
 describe(`Posts service object`, function() {
 
@@ -17,15 +17,21 @@ describe(`Posts service object`, function() {
     
     
     after('disconnect from db', () => db.destroy());
-    before('clean the table', () => db.raw('TRUNCATE users, posts RESTART IDENTITY CASCADE'));
-    afterEach('cleanup', () => db.raw('TRUNCATE users, posts RESTART IDENTITY CASCADE'));
+    before('clean the table', () => db.raw('TRUNCATE tasks, users, posts RESTART IDENTITY CASCADE'));
+    afterEach('cleanup', () => db.raw('TRUNCATE tasks, users, posts RESTART IDENTITY CASCADE'));
     
 
   describe('GET/api/posts', () => {
 
     context('Given there are NO posts in the database', () => {
 
+      const testTasks = makeTasksArray()
       const testUsers = makeUsersArray()
+      const testUser = testUsers[0]
+
+      beforeEach('insert tasks', () =>
+        seedTasks(db, testTasks)
+     );
 
     beforeEach('insert users', () =>
       seedUsers(db, testUsers)
@@ -67,12 +73,18 @@ describe(`Posts service object`, function() {
 
     context('Given there ARE posts in the database', () => {
 
+      const testTasks = makeTasksArray()
       const testUsers = makeUsersArray()
+      const testUser = testUsers[0]
       const testPosts = makePostsArray()
 
-      beforeEach('insert users', () =>
-        seedUsers(db, testUsers)
-        );
+      beforeEach('insert tasks', () =>
+        seedTasks(db, testTasks)
+     );
+
+    beforeEach('insert users', () =>
+      seedUsers(db, testUsers)
+      );
 
       beforeEach('insert posts', () =>
         seedPosts(db, testPosts)
@@ -112,9 +124,14 @@ describe(`Posts service object`, function() {
     
 
     context(`Given an XSS attack post`, () => {
+      
+      const testTasks = makeTasksArray()
       const testUsers = makeUsersArray()
       const { maliciousPost, expectedPost } = makeMaliciousPost()
         
+      beforeEach('insert tasks', () =>
+      seedTasks(db, testTasks)
+   );
 
     beforeEach('insert users', () =>
       seedUsers(db, testUsers)
@@ -143,8 +160,11 @@ describe(`Posts service object`, function() {
   describe('GET/api/posts/:postId', () => {
 
     context('Given there are NO posts in the database', () => {
-
+      const testTasks = makeTasksArray()
       const testUsers = makeUsersArray()
+
+      beforeEach('insert tasks', () => 
+      seedTasks(db, testTasks));
 
   beforeEach('insert users', () =>
     seedUsers(db, testUsers)
@@ -174,20 +194,24 @@ describe(`Posts service object`, function() {
             })
   
 
-      it(`responds 404 the post doesn't exist`, () => {
+      it(`responds 404 the post does not exist`, () => {
         return supertest(app)
-          .get(`/api/posts/123`)
+          .get(`/api/posts/1/123`)
           .set('Authorization', makeAuthHeader(testUsers[0]))
           .expect(404, {
-          error: { message: `Post doesn't exist` }
+          error: { message: `Post does not exist` }
                })
            })
        })
 
     context('Given there ARE posts in the database', () => {
 
+        const testTasks = makeTasksArray()
         const testUsers = makeUsersArray()
         const testPosts = makePostsArray()
+
+      beforeEach('insert tasks', () =>
+        seedTasks(db, testTasks));
 
       beforeEach('insert users', () =>
         seedUsers(db, testUsers)
@@ -227,37 +251,44 @@ describe(`Posts service object`, function() {
         return supertest(app)
           .get(`/api/posts/${postId}`)
           .set('Authorization', makeAuthHeader(testUsers[0]))
-          .expect(200, expectedPost)
+          .expect(200, [expectedPost])
          })
        })
       })
       
 
 
-describe('DELETE /posts/:id', () => {
+describe('DELETE /posts/1/:postId', () => {
         
   context(`Given no posts`, () => {
-
+    const testTasks = makeTasksArray()
     const testUsers = makeUsersArray()
+
+    beforeEach('insert tasks', () => 
+      seedTasks(db, testTasks));
 
   beforeEach('insert users', () =>
     seedUsers(db, testUsers)
     );
 
               
-    it(`responds 404 the post doesn't exist`, () => {
+    it(`responds 404 the post does not exist`, () => {
       return supertest(app)
-        .delete(`/api/posts/123`)
+        .delete(`/api/posts/1/123`)
         .set('Authorization', makeAuthHeader(testUsers[0]))
         .expect(404, {
-          error: { message: `Post doesn't exist` }
+          error: { message: `Post does not exist` }
                   })
               })
             })
       
   context('Given there ARE posts in the database', () => {
+        const testTasks = makeTasksArray()
         const testUsers = makeUsersArray()
         const testPosts = makePostsArray()
+
+      beforeEach('insert tasks', () => 
+        seedTasks(db, testTasks));
 
       beforeEach('insert users', () =>
         seedUsers(db, testUsers)
@@ -272,7 +303,7 @@ describe('DELETE /posts/:id', () => {
       const idToRemove = 2
       const expectedPost = testPosts.filter(post => post.post_id !== idToRemove)
                 return supertest(app)
-                  .delete(`/api/posts/${idToRemove}`)
+                  .delete(`/api/posts/1/${idToRemove}`)
                   .set('Authorization', makeAuthHeader(testUsers[0]))
                   .expect(204)
                   .then(() =>
@@ -287,11 +318,14 @@ describe('DELETE /posts/:id', () => {
           
     
           
-describe(`PATCH /api/posts/:post_id`, () => {
+describe(`PATCH /api/posts/1/:post_id`, () => {
   context(`Given no posts`, () => {
 
-      const testUsers = makeUsersArray()
+    const testTasks = makeTasksArray()  
+    const testUsers = makeUsersArray()
       
+    beforeEach('insert tasks', () => 
+    seedTasks(db, testTasks));
 
     beforeEach('insert users', () =>
       seedUsers(db, testUsers)
@@ -301,15 +335,19 @@ describe(`PATCH /api/posts/:post_id`, () => {
     it(`responds with 404`, () => {
       const postId = 123456
       return supertest(app)
-      .patch(`/api/posts/${postId}`)
+      .patch(`/api/posts/1/${postId}`)
       .set('Authorization', makeAuthHeader(testUsers[0]))
-      .expect(404, { error: { message: `Post doesn't exist` } })
+      .expect(404, { error: { message: `Post does not exist` } })
       })
     })
           
   context('Given there ARE posts in the database', () => {
+    const testTasks = makeTasksArray()
     const testUsers = makeUsersArray()
     const testPosts = makePostsArray()
+
+    beforeEach('insert tasks', () => 
+    seedTasks(db, testTasks));
  
     beforeEach('insert users', () =>
       seedUsers(db, testUsers)
@@ -324,7 +362,7 @@ describe(`PATCH /api/posts/:post_id`, () => {
     const idToUpdate = 2
     const updatedPost = {
       content: 'updated content',
-      profile_pic: 'updated pic',
+      post_pic: 'updated pic',
       date: '2019-04-22T16:28:32.615Z'
       }
           
@@ -334,13 +372,13 @@ describe(`PATCH /api/posts/:post_id`, () => {
                   }
                            
     return supertest(app)
-      .patch(`/api/posts/${idToUpdate}`)
+      .patch(`/api/posts/1/${idToUpdate}`)
       .set('Authorization', makeAuthHeader(testUsers[0]))
       .send(updatedPost)
       .expect(204)
       .then(res =>
         supertest(app)
-        .get(`/api/posts/${idToUpdate}`)
+        .get(`/api/posts/1/${idToUpdate}`)
         .set('Authorization', makeAuthHeader(testUsers[0]))
         .expect(expectedPost)
       )
@@ -350,12 +388,12 @@ describe(`PATCH /api/posts/:post_id`, () => {
                   
       const idToUpdate = 2
         return supertest(app)
-        .patch(`/api/posts/${idToUpdate}`)
+        .patch(`/api/posts/1/${idToUpdate}`)
         .set('Authorization', makeAuthHeader(testUsers[0]))
         .send({ irrelevantField: 'foo' })
         .expect(400, {
             error: {
-              message: `Request body must contain either 'content'`
+              message: `Request body must contain 'content'`
             }
           })
         })
@@ -372,7 +410,7 @@ describe(`PATCH /api/posts/:post_id`, () => {
                   }
                             
       return supertest(app)
-        .patch(`/api/posts/${idToUpdate}`)
+        .patch(`/api/posts/1/${idToUpdate}`)
         .set('Authorization', makeAuthHeader(testUsers[0]))
         .send({
             ...updatedPost,
@@ -381,7 +419,7 @@ describe(`PATCH /api/posts/:post_id`, () => {
         .expect(204)
         .then(res =>
           supertest(app)
-          .get(`/api/posts/${idToUpdate}`)
+          .get(`/api/posts/1/${idToUpdate}`)
           .set('Authorization', makeAuthHeader(testUsers[0]))
           .expect(expectedPost)
         )
@@ -394,7 +432,11 @@ describe(`PATCH /api/posts/:post_id`, () => {
 
   describe(`POST /posts`, () => {
 
-      const testUsers = makeUsersArray()
+    const testTasks = makeTasksArray()  
+    const testUsers = makeUsersArray()
+
+    beforeEach('insert tasks', () => 
+    seedTasks(db, testTasks));
 
     beforeEach('insert users', () =>
       seedUsers(db, testUsers)
@@ -405,7 +447,7 @@ describe(`PATCH /api/posts/:post_id`, () => {
     it(`creates a post, responding with 201 and the new post`, function() {
       this.retries(3)
       const newPost = {
-        post_id: 5,
+        post_id: 6,
         content: 'test new content',
         post_pic: 'test new pic' ,
         date: '2019-04-22T16:28:32.615Z'
@@ -423,11 +465,11 @@ describe(`PATCH /api/posts/:post_id`, () => {
           const actual = new Intl.DateTimeFormat('en-US').format(new Date(newUpdate.date))
           expect(actual).to.eql(expected)
           expect(res.body).to.have.property('post_id')
-          expect(res.headers.location).to.eql(`/api/posts/${res.body.post_id}`)
+          expect(res.headers.location).to.eql(`/api/posts/1/${res.body.post_id}`)
                 })
             .then(postRes =>
               supertest(app)
-              .get(`/api/posts/${postRes.body.post_id}`)
+              .get(`/api/posts/1/${postRes.body.post_id}`)
               .set('Authorization', makeAuthHeader(testUsers[0]))
               .expect(postRes.body)
                 )
@@ -463,7 +505,7 @@ describe(`PATCH /api/posts/:post_id`, () => {
             .expect(res => {
               expect(res.body.content).to.eql(expectedPost.content)
               expect(res.body.post_pic).to.eql(expectedPost.post_pic)
-              expect(res.body.date).to.eql(expectedUpdate.date)
+              expect(res.body.date).to.eql(expectedPost.date)
                           
                            })
                         })

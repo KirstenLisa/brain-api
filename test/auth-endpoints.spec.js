@@ -1,7 +1,7 @@
 const knex = require('knex')
 const jwt = require('jsonwebtoken')
 const app = require('../src/app')
-const { makeAuthHeader, seedTasks, seedUsers, seedPosts, makeMaliciousTask, makeTasksArray, makeUsersArray, makePostsArray } = require('./test-helpers')
+const { makeAuthHeader, seedTasks, seedUsers, seedPosts, makeTasksArray, makeUsersArray, makePostsArray } = require('./test-helpers')
 
 
 describe('Auth Endpoints', function() {

@@ -24,7 +24,7 @@ function makeTasksArray() {
             "category": "Other" 
          },
          {
-            "task_id": 4,
+            "task_id": 5,
             "description": "test description 5",
             "category": "Soul" 
          }
@@ -51,7 +51,7 @@ function makeUsersArray() {
          "email": "test2@email.com",
          "password": "test-password-2",
          "profile_pic": "test-url-2",
-         "current_task": 5,
+         "current_task": 2,
          "do_tasks": [2, 4],
          "done_tasks": [1,3]
       },
@@ -62,7 +62,7 @@ function makeUsersArray() {
           "email": "test3@email.com",
           "password": "test-password-3",
           "profile_pic": "test-url-3",
-          "current_task": 4,
+          "current_task": 3,
           "do_tasks": [1,2],
           "done_tasks": [3,5]
       },
@@ -131,7 +131,7 @@ function makeMaliciousPost() {
          "post_pic": 'Naughty naughty very naughty <script>alert("xss");</script>',
          "date": "2020-01-12T16:28:32.615Z"
       }
-   const expectedUpdate =
+   const expectedPost =
       {
          "post_id": 1,
          "user_id": 1,

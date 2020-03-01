@@ -7,9 +7,7 @@ CREATE TABLE users (
     profile_pic TEXT NOT NULL,
     current_task INTEGER
         REFERENCES tasks(task_id) ON DELETE CASCADE NOT NULL,
-    do_tasks INTEGER ARRAY
-        REFERENCES tasks(task_id) ON DELETE CASCADE NOT NULL,
+    do_tasks INTEGER ARRAY,
     done_tasks INTEGER ARRAY
-        REFERENCES tasks(task_id) ON DELETE CASCADE NOT NULL,
 );
 

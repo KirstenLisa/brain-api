@@ -2,9 +2,9 @@
 const app = require('../src/app')
 
 describe('App', () => {
-  it('GET / responds with 200 containing "Hello, app!"', () => {
+  it('GET / responds with 200 containing "Hello, new app!"', () => {
     return supertest(app)
       .get('/')
-      .expect(200, 'Hello, app!')
+      .expect(200, 'Hello, new app!')
   })
 })

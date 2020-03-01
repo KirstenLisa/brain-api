@@ -18,7 +18,7 @@ describe(`Users service object`, function() {
     
     
     after('disconnect from db', () => db.destroy());
-    before('clean the table', () => db.raw('TRUNCATE tasks, users, RESTART IDENTITY CASCADE'));
+    before('clean the table', () => db.raw('TRUNCATE tasks, users RESTART IDENTITY CASCADE'));
     afterEach('cleanup', () => db.raw('TRUNCATE tasks, users RESTART IDENTITY CASCADE'));
     
 
@@ -34,14 +34,14 @@ describe(`Users service object`, function() {
       const testUser = testUsers[0]
 
       beforeEach('insert tasks', () =>
-        seedTeachers(db, testTasks)
+        seedTasks(db, testTasks)
      );
 
     beforeEach('insert users', () =>
       seedUsers(db, testUsers)
       );
 
-    const requiredFields = ['id', 'username', 'fullname', 'email', 'password']
+    const requiredFields = ['username', 'fullname', 'email', 'password']
     
     requiredFields.forEach(field => {
         const registerAttemptBody = {
@@ -49,6 +49,7 @@ describe(`Users service object`, function() {
           fullname: 'Test new user',
           email: 'test@email.com',
           password: 'Test password',
+          current_task: 1
          }
 
          it(`responds with 400 required error when '${field}' is missing`, () => {
@@ -69,7 +70,8 @@ describe(`Users service object`, function() {
           username: 'test new username',
           fullname: 'Test new user',
           email: 'test@email.com',
-          password: '123456'
+          password: '123456',
+          current_task: 1
         }
         return supertest(app)
           .post('/api/users')
@@ -83,6 +85,7 @@ describe(`Users service object`, function() {
           fullname: 'Test new user',
           email: 'test@email.com',
           password: '*'.repeat(73),
+          current_task: 1
           }
           return supertest(app)
             .post('/api/users')
@@ -96,6 +99,7 @@ describe(`Users service object`, function() {
           fullname: 'Test new user',
           email: 'test@email.com',
           password: ' 1Aa!2Bb@',
+          current_task: 1
         }
         return supertest(app)
           .post('/api/users')
@@ -109,6 +113,7 @@ describe(`Users service object`, function() {
           fullname: 'Test new user',
           email: 'test@email.com',
           password: '1Aa!2Bb@ ',
+          current_task: 1
         }
         return supertest(app)
           .post('/api/users')
@@ -122,6 +127,7 @@ describe(`Users service object`, function() {
             fullname: 'Test new user',
             email: 'test@email.com',
             password: '11AAaabb',
+            current_task: 1
         }
           return supertest(app)
             .post('/api/users')
@@ -135,6 +141,7 @@ describe(`Users service object`, function() {
           fullname: 'Test new user',
           email: 'test@email.com',
           password: '11AAaa!!',
+          current_task: 1
       }
         return supertest(app)
           .post('/api/users')
@@ -146,11 +153,11 @@ describe(`Users service object`, function() {
   
   context(`Happy path`, () => {
 
-    const testTaskss = makeTeachersArray()
+    const testTasks = makeTasksArray()
 
 
     beforeEach('insert tasks', () =>
-      seedTeachers(db, testTasks)
+      seedTasks(db, testTasks)
       );
 
     it(`creates a user, responding with 201 and the new user`, function() {
@@ -160,6 +167,7 @@ describe(`Users service object`, function() {
         fullname: 'Test new user',
         email: 'test@email.com',
         password: '11AAaa!!',
+        current_task: 1
             }
           return supertest(app)
             .post('/api/users')
@@ -170,6 +178,7 @@ describe(`Users service object`, function() {
               expect(res.body.fullname).to.eql(newUser.fullname)
               expect(res.body.email).to.eql(newUser.email)
               expect(res.body).to.not.have.property('password')
+              expect(res.body).to.eql(newUser.current_task)
               expect(res.headers.location).to.eql(`/api/users/${res.body.id}`)
                })
               .expect(res =>
@@ -182,6 +191,7 @@ describe(`Users service object`, function() {
                     expect(res.body.username).to.eql(newUser.username)
                     expect(res.body.fullname).to.eql(newUser.fullname)
                     expect(res.body.email).to.eql(newUser.email)
+                    expect(res.body.current_task).to.eql(newUser.current_task)
 
                     return bcrypt.compare(newUser.password, row.password)
               })
