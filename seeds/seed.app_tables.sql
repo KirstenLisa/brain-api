@@ -35,8 +35,8 @@ VALUES
 
 INSERT INTO users(username, fullname, email, password, profile_pic, current_task, do_tasks, done_tasks)
 VALUES
-('fluffy_rabbit', 'Dings Bums',  'dingsbums@email.com', 'Password!123', 'URL', 1, '{2, 5, 6, 7}', '{3, 4, 8, 9, 10, 11, 12}'),
-('Dulli', 'Dulli Duldul', 'dulliduldul@email.com', 'Password!123', 'URL', 2, '{2, 10, 8}', '{3, 4}');
+('fluffy_rabbit', 'Dings Bums',  'dingsbums@email.com', '$2a$12$enwDVw1uuaA0gR/q1WNrBOkWu8U.ztadoEEeIF8CyE6OkJSd6lG3m', 'URL', 1, '{2, 5, 6, 7}', '{3, 4, 8, 9, 10, 11, 12}'),
+('Dulli', 'Dulli Duldul', 'dulliduldul@email.com', '$2a$12$GdCMSyWS7fWkHJDD5DKKQOhgs/o2L7rIYCTfpl1uSk.Hbrn7qbeVm', 'URL', 2, '{2, 10, 8}', '{3, 4}');
 
 
 INSERT INTO posts(content, post_pic, user_id)

@@ -33,8 +33,8 @@ usersRouter
   })
 
   .post(jsonBodyParser, (req, res, next) => {
-    const { username, fullname, email, password, current_task } = req.body
-    const newUser = { username, fullname, email, password, current_task }
+    const { username, fullname, email, password, profile_pic, current_task } = req.body
+    const newUser = { username, fullname, email, password, profile_pic, current_task }
 
    
 
@@ -66,6 +66,7 @@ usersRouter
               fullname,
               email,
               password: hashedPassword,
+              profile_pic,
               current_task
             }
 
@@ -107,6 +108,30 @@ usersRouter
     .get((req, res, next) => {
       res.json(serializeUser(res.user))
    
+    })
+
+    .patch(jsonBodyParser, (req, res, next) => {
+      const { username, fullname, email, password, profile_pic, current_task, do_tasks, done_tasks } = req.body
+      const userToUpdate = { username, fullname, email, password, profile_pic, current_task, do_tasks, done_tasks }
+  
+      const numberOfValues = Object.values(userToUpdate).filter(Boolean).length
+      if (numberOfValues === 0)
+        return res.status(400).json({
+          error: {
+            message: `Request body must contain `
+          }
+        })
+  
+      UsersService.updateUser(
+        req.app.get('db'),
+        req.params.username,
+        userToUpdate
+      )
+    
+        .then(numRowsAffected => {
+          res.status(204).end()
+        })
+        .catch(next)
     })
 
 
