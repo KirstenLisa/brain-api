@@ -59,6 +59,10 @@ const UsersService = {
       return knex('users')
         .where('username', username)
         .update(newUserFields)
+        .returning('*')
+        .then(rows => {
+          return rows[0]
+          })
     }
 }
 

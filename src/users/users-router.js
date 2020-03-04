@@ -118,7 +118,7 @@ usersRouter
       if (numberOfValues === 0)
         return res.status(400).json({
           error: {
-            message: `Request body must contain `
+            message: `Request body must contain something`
           }
         })
   
@@ -128,9 +128,9 @@ usersRouter
         userToUpdate
       )
     
-        .then(numRowsAffected => {
-          res.status(204).end()
-        })
+      .then(updatedUser => {
+        res.status(204)
+      })
         .catch(next)
     })
 
