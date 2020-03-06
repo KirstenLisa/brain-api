@@ -6,8 +6,15 @@ const awsRouter = express.Router()
 const jsonBodyParser = express.json()
 
 //aws.config.region = 'us-east-2';
-aws.config.update({ accessKeyId: AWS_ACCESS_KEY_ID, secretAccessKey: AWS_SECRET_ACCESS_KEY, region: 'us-east-2' });
+//aws.config.update({ accessKeyId: AWS_ACCESS_KEY_ID, secretAccessKey: AWS_SECRET_ACCESS_KEY, region: 'us-east-2' });
+//let creds = new aws.Credentials(AWS_ACCESS_KEY_ID);
+var creds = new aws.Credentials(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, 'session');
 
+aws.config.update({
+    region: "eu-central-1",
+    //endpoint: "http://localhost:8000/api",
+    credentials: creds
+});
 //console.log(S3_BUCKET);
 console.log(process.env.S3_BUCKET);
 console.log(aws.config);
