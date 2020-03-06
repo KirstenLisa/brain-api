@@ -3,16 +3,10 @@ const path = require('path');
 const xss = require('xss');
 const PostsService = require('./posts-service');
 const { requireAuth } = require('../middleware/jwt-auth');
-const aws = require('aws-sdk');
-const { S3_BUCKET } = require('../config.js');
+
 
 const postsRouter = express.Router()
 const jsonBodyParser = express.json()
-
-aws.config.region = 'us-east-2';
-
-//console.log(S3_BUCKET);
-console.log(process.env.S3_BUCKET);
 
 const serializePost = post => ({
   post_id: post.post_id,
@@ -36,8 +30,10 @@ postsRouter
   })
 
   .post(jsonBodyParser, (req, res, next) => {
+    console.log('inside post');
     const { content, post_pic, user_id, date } = req.body
     const newPost = { content, post_pic, user_id, date }
+    console.log(newPost);
 
     for (const [key, value] of Object.entries(newPost)) {
       if (value == null) {
@@ -52,6 +48,7 @@ postsRouter
     newPost.user_id = user_id;
     newPost.date = date;
 
+    
     PostsService.insertPost(
       req.app.get('db'),
       newPost
@@ -59,7 +56,7 @@ postsRouter
       .then(post => {
         res
           .status(201)
-          .location(path.posix.join(req.originalUrl, `/${post.post_id}`))
+          .location(path.posix.join(req.originalUrl, `/${post.user_id}/${post.post_id}`))
           .json(serializePost(post))
       })
       .catch(next)
@@ -149,32 +146,5 @@ postsRouter
       })
       .catch(next)
   })
-
-  postsRouter
-  .get('/sign-s3', (req, res) => {
-    const s3 = new aws.S3();
-    const fileName = req.query['file-name'];
-    const fileType = req.query['file-type'];
-    const s3Params = {
-      Bucket: S3_BUCKET,
-      Key: fileName,
-      Expires: 60,
-      ContentType: fileType,
-      ACL: 'public-read'
-    };
-  
-    s3.getSignedUrl('putObject', s3Params, (err, data) => {
-      if(err){
-        console.log(err);
-        return res.end();
-      }
-      const returnData = {
-        signedRequest: data,
-        url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`
-      };
-      res.write(JSON.stringify(returnData));
-      res.end();
-    });
-  });
 
 module.exports = postsRouter;

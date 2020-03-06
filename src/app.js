@@ -8,6 +8,7 @@ const authRouter = require('./auth/auth-router');
 const postsRouter = require('./posts/posts-router');
 const tasksRouter = require('./tasks/tasks-router');
 const usersRouter = require('./users/users-router');
+const awsRouter = require('./aws/aws-router');
 
 const app = express()
 
@@ -27,6 +28,7 @@ app.use('/api/auth', authRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/posts', postsRouter)
 app.use('/api/tasks', tasksRouter)
+app.use('/api/sign-s3', awsRouter)
 
 
 app.use(function errorHandler(error, req, res, next) {
