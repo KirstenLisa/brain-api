@@ -3,12 +3,12 @@
 About
 Server is used for back end of app and connects to client.
 
-URL: https://evening-dawn-46088.herokuapp.com/api
+URL: https://thawing-basin-06464.herokuapp.com/api
 
 Technologies Used
 Client side: React, JavaScript, Zeit, HTML and CSS.
 
-Server side: Express.js, Node.js, PostgreSQL and Heroku.
+Server side: Express.js, Node.js, PostgreSQL, aws and Heroku.
 
 
 <h1>URL/ Endpoints:</h1>
@@ -17,7 +17,7 @@ Server side: Express.js, Node.js, PostgreSQL and Heroku.
 
 Method: POST 
 
-Data Params { user_name: "A_Pommelhorst", password: "Password!123" }
+Data Params { user_name: "Dulli", password: "Password!123" }
 
 Success Response:
 
@@ -42,10 +42,10 @@ Success Response:
 Code: 200
 Content: { "authToken": "" }
 
-<h2>/teachers</h2>
+<h2>/tasks</h2>
 
 Method: GET
-Gets and renders teachers stored in database
+Gets and renders tasks stored in database
 
 Success Response:
 
