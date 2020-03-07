@@ -1,4 +1,4 @@
-<h1>My Classroom</h1>
+<h1>Brain App</h1>
 
 About
 Server is used for back end of app and connects to client.
@@ -17,7 +17,7 @@ Server side: Express.js, Node.js, PostgreSQL, aws and Heroku.
 
 Method: POST 
 
-Data Params { user_name: "Dulli", password: "Password!123" }
+Data Params { username: "Dulli", password: "Password!123" }
 
 Success Response:
 
@@ -53,134 +53,82 @@ Code: 200
 Content:
 
     [{
-        "teacher_name": "Mrs Krabappel",
-        "id": 1
-    },
-    ....
+        "task_id": 1,
+        "description": "Jump Trampoline",
+        "category": "Body"
+    }, ...
     ]
 
-<h2>/teachers/:teacherId</h2>
+<h2>/tasks/:taskId</h2>
 
 Method: GET
-Gets teacher by id
+Gets task by id
 
 Success Response:
 
 Code: 200
 Content:
 
-    [{
-        "teacher_name": "Mrs Krabappel",
-        "id": 1
-    },
-    ....
-    ]
+   {
+    "task_id": 1,
+    "description": "Jump Trampoline",
+    "category": "Body"
+}
 
 Error Response:
 
 Code: 404
-Content: { error: {message: 'Teacher id doesn't exist'} }
-
-
-<h2>/classes</h2>
-
-Method: GET
-Gets and renders classes stored in database
-
-Success Response:
-
-Code: 200
-Content:
-
-    [{
-        "class_id": 1,
-        "class_name": "1A",
-        "class_teacher": "Mrs Krabappel"
-    },
-    ....
-    ]
-
-<h2>/classes/:classId</h2>
-
-Method: GET
-Gets specific class by Id
-
-Success Response:
-
-Code: 200
-Content:
-
-{
-    "class_id": 2,
-    "class_name": "1B",
-    "class_teacher": "Mr Bergstrom"
-}
+Content: { error: {message: 'Task id doesn't exist'} }
 
 
 <h2>/users</h2>
 
 Method: GET
-GET: Retrieves all users from database 
+Gets and renders users stored in database
 
 Success Response:
 
 Code: 200
 Content:
 
-[{
-        "user_id": 1,
-        "fullname": "Guy Inkognito",
-        "username": "GuyI",
-        "class_id": 1,
-        "user_type": "parent"
+    [{
+        "id": 1,
+        "username": "fluffy_rabbit",
+        "fullname": "Dings Bums",
+        "email": "dingsbums@email.com",
+        "profile_pic": "https://brain-app-image-bucket.s3.eu-central-1.amazonaws.com/alpaka_funny.jpg",
+        "current_task": 1,
+        "do_tasks": [2, 5, 6, 7],
+        "done_tasks": [3, 4, 8, 9, 10, 11, 12]
     }, ...
-]
-
-Method: POST
-Lets user register as a new user
-
-Success Response:
-
-Code: 201
-
-Content:
-
-{
-        "user_id": 1,
-        "fullname": "Guy Inkognito",
-        "username": "GuyI",
-        "class_id": 1,
-        "user_type": "parent"
-    }
-
-Error Response:
-
-Code: 400
-
-Content: 
-
-{ error: `Missing 'fullname' in request body`}
-{ error: `Missing 'username' in request body`}
-{ error: `Missing 'class_id' in request body`}
-{ error: `Missing 'user_type' in request body`}
-{ error: `Username already taken` }
+    ]
 
 <h2>/users/:username</h2>
 
 Method: GET
-Gets user by username
+Gets specific user by username
 
 Success Response:
 
 Code: 200
-
 Content:
+
 {
-     "user_id": 12,
-    "fullname": "Antje Pommelhorst",
-    "username": "A_Pommelhorst",
-    "class_id": 6,
-    "user_type": "teacher"
+    "id": 2,
+    "username": "Dulli",
+    "fullname": "Dulli Duldul",
+    "email": "dulliduldul@email.com",
+    "profile_pic": "https://brain-app-image-bucket.s3.eu-central-1.amazonaws.com/Dully.JPG",
+    "current_task": 2,
+    "do_tasks": [
+        2,
+        10,
+        8
+    ],
+    "done_tasks": [
+        3,
+        4
+    ]
 }
 
 Error Response:
@@ -192,161 +140,56 @@ Content:
     "error": { "message": "User doesn't exist" }
 }
 
-
-<h2>/homework</h2>
-
-Method: GET
-Retrieves homework from database
-
-Success Response: 
-
-Code: 200
-
-Content:
-[{
-    "id": 58,
-    "homework_id": 31,
-    "subject": "Math",
-    "homework": "fvgzbhjnkm",
-    "due_date": "2020-01-02T13:13:24.000Z",
-    "teacher_id": 1,
-    "teacher_name": "Mrs Krabappel",
-    "class_id": 3
-}, ...
-]
-
-Error Response:
-
-Code: 401
-
-Content: 
-{
-    "error": "Missing bearer token"
-}
-
 Method: POST
-posts homework for specific class and subject linked to by id and homework_id
+Lets user register as a new user
 
-Success response:
+Success Response:
 
 Code: 201
 
+Content:
+
 {
-    "id": 58,
-    "homework_id": 31,
-    "subject": "Math",
-    "homework": "fvgzbhjnkm",
-    "due_date": "2020-01-02T13:13:24.000Z",
-    "teacher_id": 1,
-    "teacher_name": "Mrs Krabappel",
-    "class_id": 3
-}
+    "id": 3,
+    "username": "username",
+    "fullname": "fullname",
+    "email": "email@email.com",
+    "profile_pic": "URL",
+    }
 
 Error Response:
 
 Code: 400
 
-Content:
- error: { message: `Missing 'subject' in request body` }
- error: { message: `Missing 'homework' in request body` }
- error: { message: `Missing 'due_date' in request body` }
- error: { message: `Missing 'teacher_name' in request body` }
-
-
-<h2>/:homeworkId</h2>
-
-Method: GET
-gets specific homework from database
-
-Success Response:
-
-Code: 200
-
 Content: 
-{
-    "id": 58,
-    "homework_id": 31,
-    "subject": "Math",
-    "homework": "fvgzbhjnkm",
-    "due_date": "2020-01-02T13:13:24.000Z",
-    "teacher_id": 1,
-    "teacher_name": "Mrs Krabappel",
-    "class_id": 3
-}
 
-Error Response:
-
-Code: 404
-
-Content:
-{ error: { message: `Homework doesn't exist` } }
-
-Method: DELETE
-deletes specific homework from database
-
-Success Response:
-
-Code: 204
+{ error: `Missing 'fullname' in request body`}
+{ error: `Missing 'username' in request body`}
+{ error: `Username already taken` }
 
 Method: PATCH
-Changes specific homework
-
-Success Response:
-
-Code: 204
-
-Error Response:
-
-Code: 400
-
-Content:
-{ error: { message: `Homework doesn't exist` } }
-
-
-<h2>/update</h2>
-
-Method: GET
-Retrieves updates from database
-
-Success Response: 
-
-Code: 200
-
-Content:
-[{
-    "update_id": 111,
-    "headline": "Headline 1",
-    "content": "So much content",
-    "class_id": 3
-    "author": "Antje",
-    "date": "2020-01-02T13:13:24.000Z",
-    
-}, ...
-]
-
-Error Response:
-
-Code: 401
-
-Content: 
-{
-    "error": "Missing bearer token"
-}
-
-Method: POST
-posts update for specific class linked to by class_id
+changes existing user
 
 Success response:
 
-Code: 201
+Code: 204
 
 {
-    "update_id": 111,
-    "headline": "Headline 1",
-    "content": "So much content",
-    "class_id": 3
-    "author": "Antje",
-    "date": "2020-01-02T13:13:24.000Z"
+    "id": 2,
+    "username": "Dulli",
+    "fullname": "Dulli Duldul",
+    "email": "dulliduldul@email.com",
+    "profile_pic": "https://brain-app-image-bucket.s3.eu-central-1.amazonaws.com/Dully.JPG",
+    "current_task": new current task,
+    "do_tasks": [
+        2,
+        10,
+        8, new task
+    ],
+    "done_tasks": [
+        3,
+        4, new task
+    ]
 }
 
 Error Response:
@@ -354,118 +197,121 @@ Error Response:
 Code: 400
 
 Content:
- error: { message: `Missing 'headline' in request body` }
- error: { message: `Missing 'content' in request body` }
- error: { message: `Missing 'class_id' in request body` }
- error: { message: `Missing 'author' in request body` }
-error: { message: `Missing 'date' in request body` }
+ error: { message: `Request body must contain current task` }
 
 
-<h2>/:updateId</h2>
+
+<h2>/posts</h2>
 
 Method: GET
-gets specific update from database
+GET: Retrieves all posts from database 
 
 Success Response:
 
 Code: 200
-
-Content: 
-{
-    "update_id": 111,
-    "headline": "Headline 1",
-    "content": "So much content",
-    "class_id": 3
-    "author": "Antje",
-    "date": "2020-01-02T13:13:24.000Z"
-}
-
-Error Response:
-
-Code: 404
-
 Content:
-{ error: { message: `Update doesn't exist` } }
 
-Method: DELETE
-deletes specific update from database
-
-Success Response:
-
-Code: 204
-
-Method: PATCH
-Changes specific update
-
-Success Response:
-
-Code: 204
-
-Error Response:
-
-Code: 400
-
-Content:
-{ error: {
-          message: `Request body must contain either 'headline', 'content', 'class_id', 'author' or 'date'`
-        }
-
-
-<h2>/homework-comments</h2>
-<h2>/updates-comments</h2>
-
-Method: GET
-Retrieves comments from database
-
-Success Response:
-
-Code: 200
-
-Content:
 [{
-        "comment_id": 5,
-        "comment": "comment no. 5 homework",
-        "user_name": "Maria",
-        "date": "2019-12-29T06:59:01.783Z",
-        "user_id": 5,
-        "page_id": 33
+        "post_id": 1,
+        "user_id": 1,
+        "content": "I met my friends and we all got a haircut. Do we look pretty?",
+        "post_pic": "https://brain-app-image-bucket.s3.eu-central-1.amazonaws.com/alpakas.jpg",
+        "date": "2020-03-06T13:55:39.900Z"
     }, ...
 ]
 
+
+Error Response:
+
+Code: 401
+
+Content: 
+{
+    "error": "Missing bearer token"
+}
+
 Method: POST
-Posts comment to homework/updates related to by id
+posts post
+
+Success response:
+
+Code: 201
+
+[
+    {
+        "post_id": 20,
+        "user_id": 1,
+        "content": "new content",
+        "post_pic": "new post image url",
+        "date": new Date()
+    },
+
+Error Response:
 
 Code: 400
 
 Content:
+ error: { message: `Missing 'content' in request body` }
 
-{ error: { message: `Missing 'comment' in request body` } }
-{ error: { message: `Missing 'user_name' in request body` } }
-{ error: { message: `Missing 'date' in request body` } }
-{ error: { message: `Missing 'user_id' in request body` } }
-{ error: { message: `Missing 'page_id' in request body` } }
 
-<h2>/:commentId</h2>
+<h2>/:userId/postId</h2>
 
 Method: GET
-Retrieves specific comment from database
+gets specific post for specific user 
 
-Code: 204
+Success Response:
 
-Content:
-[
-    {
-        "comment_id": 5,
-        "comment": "comment no. 5 homework",
-        "user_name": "Maria",
-        "date": "2019-12-29T06:59:01.783Z",
-        "user_id": 5,
-        "page_id": 33
-    }
-]
-
-Code: 404
+Code: 200
 
 Content: 
 
-{ error: { message: `Comment doesn't exist` } }
+    {
+        "post_id": 8,
+        "user_id": 2,
+        "content": "Mood on a cloudy day...",
+        "post_pic": "https://brain-app-image-bucket.s3.eu-central-1.amazonaws.com/dulli_beach.jpeg",
+        "date": "2020-03-06T13:55:39.900Z"
+    },
+
+Error Response:
+
+Code: 404
+
+Content:
+{ error: { message: `Post does not exist` } }
+
+
+Method: DELETE
+deletes specific post from database
+
+Success Response:
+
+Code: 204
+
+Error Response:
+
+Code: 400
+
+Content:
+{ error: { message: `Post does not exist` } }
+
+
+<h2>/sign-s3</h2>
+
+Method: GET
+
+gets URL for saved image on aws
+
+Success Response:
+
+Code: 200
+
+Content: 
+
+"https://brain-app-image-bucket.s3.eu-central-1.amazonaws.com/alpaka_funny.jpg"
+
+Error Response:
+
+Code: 404
+
+'Could not upload file.'
