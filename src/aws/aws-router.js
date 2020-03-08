@@ -16,9 +16,6 @@ aws.config.update({
     signatureVersion: 'v4',
     //credentials: creds
  });
-//console.log(S3_BUCKET);
-console.log(process.env.S3_BUCKET);
-console.log(aws.config);
 
 awsRouter
   .get('/', (req, res) => {

@@ -19,7 +19,7 @@ const serializePost = post => ({
 
 postsRouter
   .route('/')
-  //.all(requireAuth)
+  .all(requireAuth)
   .get((req, res, next) => {
     const knexInstance = req.app.get('db')
     PostsService.getAllPosts(knexInstance)
@@ -29,7 +29,7 @@ postsRouter
     .catch(next)
   })
 
-  .post(jsonBodyParser, (req, res, next) => {
+  .post(jsonBodyParser, requireAuth, (req, res, next) => {
     console.log('inside post');
     const { content, post_pic, user_id, date } = req.body
     const newPost = { content, post_pic, user_id, date }
@@ -64,7 +64,7 @@ postsRouter
 
 postsRouter
   .route('/:userId')
-  //.all(requireAuth)
+  .all(requireAuth)
   .all((req, res, next) => {
     const knexInstance = req.app.get('db')
     PostsService.getByUser(
@@ -89,7 +89,7 @@ postsRouter
 
 postsRouter
   .route('/:userId/:postId')
-  //.all(requireAuth)
+  .all(requireAuth)
   .all((req, res, next) => {
     const knexInstance = req.app.get('db')
     PostsService.getById(
@@ -123,7 +123,7 @@ postsRouter
       .catch(next)
   })
 
-  .patch(jsonBodyParser, (req, res, next) => {
+  .patch(jsonBodyParser, requireAuth, (req, res, next) => {
     const { content, post_pic, user_id, date } = req.body
     const postToUpdate = { content, post_pic, user_id, date }
 

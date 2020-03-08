@@ -49,6 +49,7 @@ describe(`Users service object`, function() {
           fullname: 'Test new user',
           email: 'test@email.com',
           password: 'Test password',
+          profile_pic: 'url',
           current_task: 1
          }
 
@@ -71,6 +72,7 @@ describe(`Users service object`, function() {
           fullname: 'Test new user',
           email: 'test@email.com',
           password: '123456',
+          profile_pic: 'url',
           current_task: 1
         }
         return supertest(app)
@@ -85,6 +87,7 @@ describe(`Users service object`, function() {
           fullname: 'Test new user',
           email: 'test@email.com',
           password: '*'.repeat(73),
+          profile_pic: 'url',
           current_task: 1
           }
           return supertest(app)
@@ -99,6 +102,7 @@ describe(`Users service object`, function() {
           fullname: 'Test new user',
           email: 'test@email.com',
           password: ' 1Aa!2Bb@',
+          profile_pic: 'url',
           current_task: 1
         }
         return supertest(app)
@@ -113,6 +117,7 @@ describe(`Users service object`, function() {
           fullname: 'Test new user',
           email: 'test@email.com',
           password: '1Aa!2Bb@ ',
+          profile_pic: 'url',
           current_task: 1
         }
         return supertest(app)
@@ -127,6 +132,7 @@ describe(`Users service object`, function() {
             fullname: 'Test new user',
             email: 'test@email.com',
             password: '11AAaabb',
+            profile_pic: 'url',
             current_task: 1
         }
           return supertest(app)
@@ -141,6 +147,7 @@ describe(`Users service object`, function() {
           fullname: 'Test new user',
           email: 'test@email.com',
           password: '11AAaa!!',
+          profile_pic: 'url',
           current_task: 1
       }
         return supertest(app)
@@ -167,6 +174,7 @@ describe(`Users service object`, function() {
         fullname: 'Test new user',
         email: 'test@email.com',
         password: '11AAaa!!',
+        profile_pic: 'url',
         current_task: 1
             }
           return supertest(app)
