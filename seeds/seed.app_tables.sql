@@ -13,8 +13,6 @@ VALUES
 ('Meditate', 'Soul'),
 ('Sort all photos you have ever taken', 'Other'),
 ('Adopt a Dog', 'Soul'),
-('Sort all photos you have ever taken', 'Other'),
-('Adopt a Dog', 'Soul'),
 ('Plant a Tree', 'Other'),
 ('Sleep Outside', 'Body'),
 ('See the Sunrise', 'Soul'),
@@ -36,7 +34,7 @@ VALUES
 INSERT INTO users(username, fullname, email, password, profile_pic, current_task, do_tasks, done_tasks)
 VALUES
 ('fluffy_rabbit', 'Dings Bums',  'dingsbums@email.com', '$2a$12$enwDVw1uuaA0gR/q1WNrBOkWu8U.ztadoEEeIF8CyE6OkJSd6lG3m', 'https://brain-app-image-bucket.s3.eu-central-1.amazonaws.com/alpaka_funny.jpg', 1, '{2, 5, 6, 7}', '{3, 4, 8, 9, 10, 11, 12}'),
-('Dulli', 'Dulli Duldul', 'dulliduldul@email.com', '$2a$12$GdCMSyWS7fWkHJDD5DKKQOhgs/o2L7rIYCTfpl1uSk.Hbrn7qbeVm', 'https://brain-app-image-bucket.s3.eu-central-1.amazonaws.com/Dully.JPG', 2, '{2, 10, 8}', '{3, 4}');
+('Dulli', 'Dulli Duldul', 'dulliduldul@email.com', '$2a$12$GdCMSyWS7fWkHJDD5DKKQOhgs/o2L7rIYCTfpl1uSk.Hbrn7qbeVm', 'https://brain-app-image-bucket.s3.eu-central-1.amazonaws.com/Dully.JPG', 2, '{5, 10, 8}', '{3, 4}');
 
 
 INSERT INTO posts(content, post_pic, user_id)
