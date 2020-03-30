@@ -1,10 +1,7 @@
 const express = require('express')
 const path = require('path')
 const xss = require('xss')
-const uuid = require('uuid/v4')
 const UsersService = require('./users-service')
-const logger = require('../logger')
-const STORE = require('../dummystore')
 
 const usersRouter = express.Router()
 const jsonBodyParser = express.json()

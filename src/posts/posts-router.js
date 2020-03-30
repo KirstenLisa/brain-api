@@ -30,10 +30,8 @@ postsRouter
   })
 
   .post(jsonBodyParser, requireAuth, (req, res, next) => {
-    console.log('inside post');
     const { content, post_pic, user_id, date } = req.body
     const newPost = { content, post_pic, user_id, date }
-    console.log(newPost);
 
     for (const [key, value] of Object.entries(newPost)) {
       if (value == null) {
@@ -118,7 +116,6 @@ postsRouter
     )
       .then(numRowsAffected => {
         res.status(204).end()
-        console.log('deleted')
       })
       .catch(next)
   })
